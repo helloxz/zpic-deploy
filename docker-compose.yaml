@@ -6,6 +6,8 @@ services:
       - mynet
     ports:
       - "2080:2080"
+    env_file:
+      - .env
     # 环境变量
     environment:
       - WORKERS=2

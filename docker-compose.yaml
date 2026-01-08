@@ -57,7 +57,7 @@ services:
     restart: always
 
   imgproxy:
-    image: hub.tcp.mk/imgproxy/imgproxy:latest
+    image: imgproxy/imgproxy:latest
     container_name: imgproxy
     networks:
       - mynet

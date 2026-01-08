@@ -57,7 +57,7 @@ services:
     restart: always
 
   imgproxy:
-    image: imgproxy/imgproxy:latest
+    image: ghcr.io/imgproxy/imgproxy
     container_name: imgproxy
     networks:
       - mynet

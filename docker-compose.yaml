@@ -41,8 +41,8 @@ services:
     restart: always
     volumes:
       - ./redis/data:/data
-      - ./redis/redis.conf:/data/redis.conf
-    command: ["redis-server", "/data/redis.conf"]
+      - ./redis/redis.conf:/etc/redis/redis.conf
+    command: ["redis-server", "/etc/redis/redis.conf"]
 
   nsfw:
     container_name: nsfw

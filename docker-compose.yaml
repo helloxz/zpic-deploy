@@ -6,6 +6,8 @@ services:
       - mynet
     ports:
       - "2080:2080"
+    volumes:
+      - ./zpic/data:/opt/zpic/app/data
     env_file:
       - .env
     # 环境变量

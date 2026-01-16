@@ -13,6 +13,9 @@ services:
     # 环境变量
     environment:
       - WORKERS=2
+    depends_on:
+      - postgres
+      - redis
     restart: always
 
   postgres:

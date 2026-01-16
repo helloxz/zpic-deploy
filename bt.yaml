@@ -1,26 +1,23 @@
 services:
   zpic:
     container_name: zpic
-    image: helloz/zpic
+    image: pub.tcp.mk/helloz/zpic
     networks:
-      - mynet
+      - baota_net
     ports:
       - "2080:2080"
     volumes:
-      - ./zpic/data:/opt/zpic/app/data
+      - ${APP_PATH}/data:/opt/zpic/app/data
     env_file:
       - .env
     # 环境变量
     environment:
       - WORKERS=2
-    depends_on:
-      - postgres
-      - redis
     restart: always
 
   postgres:
     container_name: postgres
-    image: postgres:17-bookworm
+    image: docker.1ms.run/postgres:17-bookworm
     restart: unless-stopped
     env_file:
       - .env
@@ -29,54 +26,49 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
-      - ./pgsql/data:/var/lib/postgresql/data
-      - ./pgsql/postgres.conf:/etc/postgresql/postgresql.conf:ro
+      - ${APP_PATH}/pgsql/data:/var/lib/postgresql/data
+      - ${APP_PATH}/pgsql/postgres.conf:/etc/postgresql/postgresql.conf:ro
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
-    ports:
-      - "127.0.0.1:5432:5432"
     networks:
-      - mynet
+      - baota_net
 
   redis:
-    image: redis:8-alpine
+    image: docker.1ms.run/redis:8-alpine
     container_name: redis
     networks:
-      - mynet
-    ports:
-      - "127.0.0.1:6379:6379"
+      - baota_net
     restart: always
     volumes:
-      - ./redis/data:/data
-      - ./redis/redis.conf:/etc/redis/redis.conf
+      - ${APP_PATH}/redis/data:/data
+      - ${APP_PATH}/redis/redis.conf:/etc/redis/redis.conf
     command: ["redis-server", "/etc/redis/redis.conf"]
-
+    
   nsfw:
     container_name: nsfw
-    image: helloz/nsfw
+    image: pub.tcp.mk/helloz/nsfw
     networks:
-      - mynet
+      - baota_net
     ports:
       - "6086:6086"
-    # 环境变量
     env_file:
       - .env
+    # 环境变量
     environment:
       - TOKEN=${NSFW_TOKEN}
     restart: always
 
   imgproxy:
-    image: ghcr.io/imgproxy/imgproxy
+    image: pub.tcp.mk/helloz/imgproxy
     container_name: imgproxy
     networks:
-      - mynet
-    ports:
-      - "8088:8080"
+      - baota_net
     env_file:
       - .env
+    ports:
+      - "8088:8080"
     environment:
       - IMGPROXY_KEY=${IMGPROXY_KEY}
       - IMGPROXY_SALT=${IMGPROXY_SALT}
-      #- IMGPROXY_ALLOWED_SOURCES=https://your-bucket.s3.amazonaws.com,https://cdn.yoursite.com
       - IMGPROXY_QUALITY=80
       - IMGPROXY_AUTO_ROTATE=true
       - IMGPROXY_AUTO_WEBP=true
@@ -84,5 +76,5 @@ services:
     restart: unless-stopped
 
 networks:
-  mynet:
+  baota_net:
     driver: bridge

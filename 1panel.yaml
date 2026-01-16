@@ -1,0 +1,53 @@
+services:
+  zpic:
+    container_name: zpic
+    image: pub.tcp.mk/helloz/zpic
+    networks:
+      - 1panel-network
+    ports:
+      - "2080:2080"
+    volumes:
+      - ./data:/opt/zpic/app/data
+    env_file:
+      - 1panel.env
+    # 环境变量
+    environment:
+      - WORKERS=2
+    restart: always
+
+  nsfw:
+    container_name: nsfw
+    image: pub.tcp.mk/helloz/nsfw
+    networks:
+      - 1panel-network
+    ports:
+      - "6086:6086"
+    env_file:
+      - 1panel.env
+    # 环境变量
+    environment:
+      - TOKEN=${NSFW_TOKEN}
+    restart: always
+
+  imgproxy:
+    image: pub.tcp.mk/helloz/imgproxy
+    container_name: imgproxy
+    networks:
+      - 1panel-network
+    ports:
+      - "8088:8080"
+    env_file:
+      - 1panel.env
+    environment:
+      - IMGPROXY_KEY=${IMGPROXY_KEY}
+      - IMGPROXY_SALT=${IMGPROXY_SALT}
+      #- IMGPROXY_ALLOWED_SOURCES=https://your-bucket.s3.amazonaws.com,https://cdn.yoursite.com
+      - IMGPROXY_QUALITY=80
+      - IMGPROXY_AUTO_ROTATE=true
+      - IMGPROXY_AUTO_WEBP=true
+      - IMGPROXY_MAX_SRC_FILE_SIZE=10485760
+    restart: unless-stopped
+
+networks:
+    1panel-network:
+        external: true

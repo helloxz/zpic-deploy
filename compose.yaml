@@ -20,7 +20,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:17-bookworm
+    image: postgres:17.7-bookworm
     restart: unless-stopped
     env_file:
       - .env
@@ -38,7 +38,7 @@ services:
       - mynet
 
   redis:
-    image: redis:8-alpine
+    image: redis:8.4-alpine
     container_name: redis
     networks:
       - mynet

@@ -20,7 +20,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: docker.1ms.run/postgres:17-bookworm
+    image: docker.1ms.run/postgres:17.7-bookworm
     restart: unless-stopped
     env_file:
       - .env
@@ -36,7 +36,7 @@ services:
       - baota_net
 
   redis:
-    image: docker.1ms.run/redis:8-alpine
+    image: docker.1ms.run/redis:8.4-alpine
     container_name: redis
     networks:
       - baota_net
